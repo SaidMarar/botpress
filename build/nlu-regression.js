@@ -116,7 +116,8 @@ async function createBot(botId, token) {
 
 async function waitForTraining(botId, token) {
   return new Promise(function(resolve) {
-    console.log('training...')
+    var i = 0
+    console.log(`training...`)
     const intervalId = setInterval(async () => {
       const raw = await get(`/api/v1/bots/${botId}/mod/nlu/train`, {
         Authorization: `Bearer ${token}`
@@ -126,7 +127,7 @@ async function waitForTraining(botId, token) {
         clearInterval(intervalId)
         resolve()
       } else {
-        console.log('training...')
+        console.log(`training... ${2 * ++i}s`)
       }
     }, 2000)
   })
@@ -168,7 +169,8 @@ async function runAllTests(botId, token) {
     console.log(`(${i++} /${nTests}) #${test.id}`, 'success: ', testResult.success)
   }
 
-  return round(nPassing / nTests, 1) * 100
+  const acc = (nPassing / nTests) * 100
+  return round(acc, 1)
 }
 
 async function compareScore(score) {
